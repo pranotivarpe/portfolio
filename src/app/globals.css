@@ -1,0 +1,352 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Day service: paper transit map, dawn to golden hour */
+:root {
+  color-scheme: light;
+  --background: #f5f3ee;
+  --foreground: #1c2430;
+  --surface: #ffffff;
+  --border: #e2e1da;
+  --muted: #5b6472;
+  --accent: #2454c9;
+  --accent-foreground: #ffffff;
+  --accent-soft: #e3ebfc;
+
+  /* A warm signal light — station indicators, the travelling companion, badges */
+  --signal: #f2a71b;
+
+  /* Line colors, one per skill category — like routes on a map */
+  --line-1: #d6433a;
+  --line-2: #2454c9;
+  --line-3: #1f9d63;
+  --line-4: #8b5cf6;
+  --line-5: #e08a0c;
+  --line-6: #0891a8;
+  --line-7: #c23b7a;
+
+  /* Frosted-glass panels over cards and the hero */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-strong: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(28, 36, 48, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.9);
+
+  /* The page-long journey: dawn at the terminus, bright midday, dusk, a golden arrival */
+  --depth-0: #fbe7d6;
+  --depth-1: #f6eee2;
+  --depth-2: #f5f3ee;
+  --depth-3: #eef1ef;
+  --depth-4: #f3ecda;
+  --depth-5: #f6dfb0;
+  --depth-6: #f3cd8e;
+}
+
+/* Night service: neon signage on a sleeping city */
+.dark {
+  color-scheme: dark;
+  --background: #0c111c;
+  --foreground: #e7ebf3;
+  --surface: #141b29;
+  --border: #263149;
+  --muted: #8b95ab;
+  --accent: #5b8dff;
+  --accent-foreground: #0a0f1a;
+  --accent-soft: #1a2740;
+
+  --signal: #ffb020;
+
+  --line-1: #ff6b5e;
+  --line-2: #5b8dff;
+  --line-3: #34d399;
+  --line-4: #a78bfa;
+  --line-5: #ffb020;
+  --line-6: #2dd4da;
+  --line-7: #ec6bb0;
+
+  --glass-bg: rgba(13, 18, 28, 0.55);
+  --glass-bg-strong: rgba(13, 18, 28, 0.76);
+  --glass-border: rgba(232, 236, 243, 0.14);
+  --glass-highlight: rgba(232, 236, 243, 0.18);
+
+  --depth-0: #10141f;
+  --depth-1: #0c1019;
+  --depth-2: #090c16;
+  --depth-3: #070911;
+  --depth-4: #0b0f1a;
+  --depth-5: #171512;
+  --depth-6: #241c12;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-signal: var(--signal);
+  --color-line-1: var(--line-1);
+  --color-line-2: var(--line-2);
+  --color-line-3: var(--line-3);
+  --color-line-4: var(--line-4);
+  --color-line-5: var(--line-5);
+  --color-line-6: var(--line-6);
+  --color-line-7: var(--line-7);
+  --font-sans: var(--font-figtree);
+  --font-display: var(--font-fraunces);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* The continuous backdrop behind every section below the hero: one long journey */
+.world-gradient {
+  background: linear-gradient(
+    to bottom,
+    var(--depth-0) 0%,
+    var(--depth-1) 14%,
+    var(--depth-2) 30%,
+    var(--depth-3) 48%,
+    var(--depth-4) 66%,
+    var(--depth-5) 84%,
+    var(--depth-6) 100%
+  );
+}
+
+/* City lights drifting the length of the page */
+.ambient-sprite {
+  position: absolute;
+  animation: ambient-drift var(--sprite-duration, 10s) ease-in-out infinite;
+  animation-delay: var(--sprite-delay, 0s);
+  will-change: transform, opacity;
+}
+
+@keyframes ambient-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate(var(--sprite-drift, 16px), -16px);
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-sprite {
+    animation: none;
+    opacity: 0.4;
+  }
+}
+
+/* Applied briefly while switching day/night service so colors ease instead of snapping */
+html.theme-transition,
+html.theme-transition * {
+  transition:
+    background-color 0.6s ease,
+    border-color 0.6s ease,
+    color 0.6s ease !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.font-display {
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+/* A soft sheen that sweeps across primary buttons on hover */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+  transform: translateX(-130%);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-shine:hover::after {
+  transform: translateX(130%);
+}
+
+/* A gentle glow that grows under accent-colored elements on hover */
+.shadow-glow {
+  transition:
+    box-shadow 0.35s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 8px 24px -12px var(--accent);
+}
+
+.shadow-glow:hover {
+  box-shadow: 0 14px 34px -10px var(--accent);
+}
+
+/* Lifts a card toward the viewer and picks out its border on hover */
+.card-lift {
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+  box-shadow: 0 22px 44px -24px rgba(0, 0, 0, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-shine::after {
+    display: none;
+  }
+
+  .card-lift:hover,
+  .shadow-glow:hover {
+    transform: none;
+  }
+}
+
+/* Frosted glass panel, used for the hero and elevated surfaces */
+.glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+}
+
+.glass-panel-strong {
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
+}
+
+/* A thin light seam along the top edge of a glass panel, like a highlight catching it */
+.glass-edge {
+  position: relative;
+}
+
+.glass-edge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(160deg, var(--glass-highlight), transparent 40%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Large ambient glow used behind hero copy and section headers */
+.glow-orb {
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  filter: blur(60px);
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-orb {
+    opacity: 0.2;
+  }
+}
+
+/* A lit signal travelling along a request-path line */
+.transit-flow {
+  stroke-dasharray: 0.03 0.09;
+  animation: transit-flow 1.6s linear infinite;
+}
+
+@keyframes transit-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 0.12;
+  }
+}
+
+/* A signal moving along a project's flow line */
+.transit-line-fill {
+  background-color: var(--border);
+  background-image: repeating-linear-gradient(to bottom, var(--signal) 0 8px, transparent 8px 28px);
+  background-size: 100% 28px;
+  animation: transit-down 1.4s linear infinite;
+}
+
+@media (min-width: 1024px) {
+  .transit-line-fill {
+    background-image: repeating-linear-gradient(to right, var(--signal) 0 8px, transparent 8px 28px);
+    background-size: 28px 100%;
+    animation-name: transit-right;
+  }
+}
+
+@keyframes transit-down {
+  to {
+    background-position: 0 28px;
+  }
+}
+
+@keyframes transit-right {
+  to {
+    background-position: 28px 0;
+  }
+}
+
+/* Trail map opening */
+.trail-map[open] {
+  animation: trail-in 0.2s ease-out;
+}
+
+@keyframes trail-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trail-map[open] {
+    animation: none;
+  }
+
+  .transit-flow,
+  .transit-line-fill {
+    animation: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
